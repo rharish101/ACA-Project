@@ -1,5 +1,5 @@
 # ACA-Project
-All practice problems related to my ACA project: Using Reinforcement Learning to play Atari games:
+All practice problems related to my ACA project: Using Reinforcement Learning to play Atari games.
 
 # Model-based : Dynamic Programming:
 * [Policy Evaluation (Gridworld)](https://github.com/rharish101/ACA-Project/blob/master/pol_eval.py)
