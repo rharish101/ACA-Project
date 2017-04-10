@@ -137,6 +137,9 @@ def q_learning(env, estimator, num_episodes, discount_factor=1.0, epsilon=0.1, e
 		episode_lengths=np.zeros(num_episodes),
 		episode_rewards=np.zeros(num_episodes))    
 
+	#The list of experienced transitions for exp-replay
+	experience = []
+
 	for i_episode in range(num_episodes):
 
 		# The policy we're following
@@ -152,11 +155,13 @@ def q_learning(env, estimator, num_episodes, discount_factor=1.0, epsilon=0.1, e
 		#Run the episode and find rewards   
 		state = env.reset()
 
+		
 		#Adding rewards found to Q_new  
 		while True:
 			pol = policy(state)
 			action = np.random.choice(np.arange(len(pol)), p=pol)
 			state_new, reward, done, info = env.step(action)
+			experience.append((state, action, reward, state_new))
 
 			#Update stats   
 			stats.episode_rewards[i_episode] += reward
@@ -168,6 +173,13 @@ def q_learning(env, estimator, num_episodes, discount_factor=1.0, epsilon=0.1, e
 			if done:
 				break
 			state = state_new
+
+		#Experience replay every 10 episodes	
+		if (i_episode + 1) % 3 == 0:
+			batch = [experience[i] for i in np.random.choice(np.arange(len(experience)), size = 50, replace = False).tolist()]
+			for (state, action, reward, state_new) in batch:
+				td_target = reward + discount_factor * np.amax(estimator.predict(state_new)) 
+				estimator.update(state, action, td_target)	
 
 	print()	
 	return stats
