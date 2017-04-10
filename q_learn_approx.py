@@ -174,7 +174,7 @@ def q_learning(env, estimator, num_episodes, discount_factor=1.0, epsilon=0.1, e
 				break
 			state = state_new
 
-		#Experience replay every 10 episodes	
+		#Experience replay	
 		if (i_episode + 1) % 3 == 0:
 			batch = [experience[i] for i in np.random.choice(np.arange(len(experience)), size = 50, replace = False).tolist()]
 			for (state, action, reward, state_new) in batch:
