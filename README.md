@@ -16,4 +16,4 @@ All of my solutions to the practice problems related to my ACA project: Using Re
 * [Q-Learning (Cliff Walker)](https://github.com/rharish101/ACA-Project/blob/master/q_learn.py)
 
 # Function Approximation:
-* [Q-Learning with Stochastic Gradient Descent and Experience Replay(Mountain Car)](https://github.com/rharish101/ACA-Project/blob/master/q_learn_approx.py)
+* [Q-Learning with Stochastic Gradient Descent and Experience Replay (Mountain Car)](https://github.com/rharish101/ACA-Project/blob/master/q_learn_approx.py)
