@@ -81,11 +81,11 @@ def pong_learn(num_episodes=20, exp_size=200000, discount_factor=0.99,
                             lambda count: count % save_video_every == 0)
 
     if 'model_pong.data' in os.listdir('.'):
-        print "\n\nLoading model experience...\n"
+        print "\n\nLoading model experience..."
         exp_file = open('model_pong.data')
         experience = pickle.load(exp_file)
         exp_file.close()
-        print "\n\nModel experience loaded\nExperience size = %d\n" % len(
+        print "Model experience loaded\nExperience size = %d\n" % len(
               experience)
     else:
         experience = deque(maxlen=exp_size)
@@ -178,35 +178,40 @@ def pong_learn(num_episodes=20, exp_size=200000, discount_factor=0.99,
                 break
         
         if time.time() - now > save_model_every:
+            print "\n\nSaving model..."
             model.save('model_pong.h5')
+            exp_file = open('model_pong.data', 'wb')
+            pickle.dump(experience, exp_file)
+            exp_file.close()
+            print "Model saved\n"
             now = time.time()
 
         sys.stdout.write("%d episode(s) done out of %d" % (ep_num + 1,
                                                            num_episodes))
         sys.stdout.flush()
 
-    print "\n\nSaving model...\n\n"
+    print "\n\nSaving model..."
     model.save('model_pong.h5')
     exp_file = open('model_pong.data', 'wb')
     pickle.dump(experience, exp_file)
     exp_file.close()
-    print "\n\nModel saved\n"
+    print "Model saved\n"
 
 try:
     pong_learn(exp_sample_size=16, tensorboard=False, verbose=False)
 except KeyboardInterrupt:
-    print "\n\nSaving model...\n\n"
+    print "\n\nSaving model..."
     model.save('model_pong.h5')
     exp_file = open('model_pong.data', 'wb')
     pickle.dump(experience, exp_file)
     exp_file.close()
-    print "\n\nModel saved\n"
+    print "Model saved\n"
 except:
-    print "\n\nSaving model...\n\n"
+    print "\n\nSaving model..."
     model.save('model_pong.h5')
     exp_file = open('model_pong.data', 'wb')
     pickle.dump(experience, exp_file)
     exp_file.close()
-    print "\n\nModel saved\n"
+    print "Model saved\n"
     raise
 
