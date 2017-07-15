@@ -1,5 +1,4 @@
-ACA-Project
------------
+# ACA-Project
 All of my solutions to the practice problems related to my ACA project: Using Reinforcement Learning to play Atari games.
 
 **Model-based : Dynamic Programming:**
@@ -19,7 +18,8 @@ All of my solutions to the practice problems related to my ACA project: Using Re
 **Function Approximation:**
 * [Q-Learning with Stochastic Gradient Descent and Experience Replay (Mountain Car)](https://github.com/rharish101/ACA-Project/blob/master/q_learn_approx.py)
 
-# Pong Agent
+Pong Agent
+----------
 * [Playing pong with DQN](https://github.com/rharish101/ACA-Project/blob/master/pong_dqn.py)
 * [Playing pong with Policy Gradients (Currently facing errors)](https://github.com/rharish101/ACA-Project/blob/master/pong_polgrad.py)
 
