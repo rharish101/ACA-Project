@@ -166,41 +166,41 @@ def pong_learn(num_episodes=20000, exp_size=200000, discount_factor=0.99,
                 break
         
         if time.time() - now > save_model_every:
-            print "\n\nSaving model...\n\n"
+            print "\n\nSaving model..."
             model.save('model_pong.h5')
             exp_file = open('model_pong.data', 'wb')
             pickle.dump((policy_epsilon, experience), exp_file)
             exp_file.close()
-            print "\n\nModel saved\n"
+            print "Model saved\n"
             now = time.time()
 
         sys.stdout.write("\n%d episode(s) done out of %d\n" % (ep_num + 1,
                                                                num_episodes))
         sys.stdout.flush()
 
-    print "\n\nSaving model...\n\n"
+    print "\n\nSaving model..."
     model.save('model_pong.h5')
     exp_file = open('model_pong.data', 'wb')
     pickle.dump((policy_epsilon, experience), exp_file)
     exp_file.close()
-    print "\n\nModel saved\n"
+    print "Model saved\n"
 
 try:
     pong_learn(exp_sample_size=16, num_episodes=10000, save_video_every=50,
                tensorboard=False, verbose=False)
 except KeyboardInterrupt:
-    print "\n\nSaving model...\n\n"
+    print "\n\nSaving model..."
     model.save('model_pong.h5')
     exp_file = open('model_pong.data', 'wb')
     pickle.dump((pong_policy_epsilon, pong_experience), exp_file)
     exp_file.close()
-    print "\n\nModel saved\n"
+    print "Model saved\n"
 except:
-    print "\n\nSaving model...\n\n"
+    print "\n\nSaving model..."
     model.save('model_pong.h5')
     exp_file = open('model_pong.data', 'wb')
     pickle.dump((pong_policy_epsilon, pong_experience), exp_file)
     exp_file.close()
-    print "\n\nModel saved\n"
+    print "Model saved\n"
     raise
 
