@@ -62,7 +62,7 @@ def pong_learn(num_episodes=20000, exp_size=200000, discount_factor=0.99,
                             lambda count: count % save_video_every == 0)
 
     if 'model_pong.data' in os.listdir('.'):
-        print "\n\nLoading model experience...\n"
+        print "\nLoading model experience...\n"
         exp_file = open('model_pong.data')
         policy_epsilon, experience = pickle.load(exp_file)
         exp_file.close()
