@@ -80,15 +80,15 @@ def pong_learn(num_episodes=20, exp_size=200000, discount_factor=0.99,
     env = gym.wrappers.Monitor(env, 'Videos', resume=True, video_callable=
                             lambda count: count % save_video_every == 0)
 
+    experience = deque(maxlen=exp_size)
     if 'model_pong.data' in os.listdir('.'):
         print "\n\nLoading model experience..."
         exp_file = open('model_pong.data')
-        experience = pickle.load(exp_file)
+        exp = pickle.load(exp_file)
         exp_file.close()
+        experience.extend(exp)
         print "Model experience loaded\nExperience size = %d\n" % len(
               experience)
-    else:
-        experience = deque(maxlen=exp_size)
     global pong_experience
     pong_experience = experience
 

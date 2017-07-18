@@ -52,7 +52,7 @@ pong_policy_epsilon = 0.6
 
 def pong_learn(num_episodes=20000, exp_size=200000, discount_factor=0.99,
                policy_epsilon=0.6, epsilon_decay_factor=0.9,
-               epsilon_decay_episodes=10, min_epsilon=0.001, 
+               epsilon_decay_episodes=100, min_epsilon=0.001, 
                save_model_every=1800, reset_fixed_every=5, exp_sample_size=32,
                save_video_every=500, tensorboard=True, render=False,
                verbose=True):
@@ -61,15 +61,15 @@ def pong_learn(num_episodes=20000, exp_size=200000, discount_factor=0.99,
     env = gym.wrappers.Monitor(env, 'Videos', resume=True, video_callable=
                             lambda count: count % save_video_every == 0)
 
+    experience = deque(maxlen=exp_size)
     if 'model_pong.data' in os.listdir('.'):
         print "\nLoading model experience..."
         exp_file = open('model_pong.data')
-        policy_epsilon, experience = pickle.load(exp_file)
+        policy_epsilon, exp = pickle.load(exp_file)
         exp_file.close()
+        experience.extend(exp)
         print "Model experience loaded\nExperience size = %d\n" % len(
               experience)
-    else:
-        experience = deque(maxlen=exp_size)
     global pong_experience
     pong_experience = experience
     global pong_policy_epsilon
@@ -186,7 +186,7 @@ def pong_learn(num_episodes=20000, exp_size=200000, discount_factor=0.99,
     print "Model saved\n"
 
 try:
-    pong_learn(exp_sample_size=16, num_episodes=10000, save_video_every=50,
+    pong_learn(exp_sample_size=16, num_episodes=10000, save_video_every=10,
                tensorboard=False, verbose=False)
 except KeyboardInterrupt:
     print "\n\nSaving model..."
