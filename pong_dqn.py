@@ -8,6 +8,7 @@ import itertools
 import random
 import os
 import sys
+from shutil import copy
 import pickle
 from collections import deque
 from keras.models import Sequential, load_model
@@ -49,17 +50,29 @@ tb_callback = TensorBoard(log_dir='/home/rharish/Programs/Python/RL'\
 
 pong_experience = deque()
 pong_policy_epsilon = 0.6
+pong_ep_num = 0
+
+def saver():
+    print "\n\nSaving model..."
+    model.save('model_pong.h5')
+    exp_file = open('model_pong.data', 'wb')
+    pickle.dump((pong_policy_epsilon, pong_experience), exp_file)
+    exp_file.close()
+    copy('model_pong.h5', '../')
+    copy('model_pong.data', '../')
+    print "Model saved\n"
 
 def pong_learn(num_episodes=20000, exp_size=200000, discount_factor=0.99,
                policy_epsilon=0.6, epsilon_decay_factor=0.9,
                epsilon_decay_episodes=100, min_epsilon=0.001, 
                save_model_every=1800, reset_fixed_every=5, exp_sample_size=32,
-               save_video_every=500, tensorboard=True, render=False,
-               verbose=True):
+               save_video_every=50, tensorboard=True, render=False,
+               verbose=True, video_record=True):
 
     env = gym.make('Pong-v4')
-    env = gym.wrappers.Monitor(env, 'Videos', resume=True, video_callable=
-                            lambda count: count % save_video_every == 0)
+    if video_record:
+        env = gym.wrappers.Monitor(env, 'Videos', resume=True, video_callable=
+                                lambda count: count % save_video_every == 0)
 
     experience = deque(maxlen=exp_size)
     if 'model_pong.data' in os.listdir('.'):
@@ -78,7 +91,9 @@ def pong_learn(num_episodes=20000, exp_size=200000, discount_factor=0.99,
     fixed_model = Sequential.from_config(model.get_config())
     now = time.time()
 
-    for ep_num in range(num_episodes):
+    global pong_ep_num
+    for ep_num in range(pong_ep_num, num_episodes):
+        pong_ep_num = ep_num
         state = deque(maxlen=4)
         state.append(imresize(cvtColor(env.reset(), COLOR_RGB2GRAY), (84, 84)).\
                      astype(np.uint8))
@@ -166,41 +181,33 @@ def pong_learn(num_episodes=20000, exp_size=200000, discount_factor=0.99,
                 break
         
         if time.time() - now > save_model_every:
-            print "\n\nSaving model..."
-            model.save('model_pong.h5')
-            exp_file = open('model_pong.data', 'wb')
-            pickle.dump((policy_epsilon, experience), exp_file)
-            exp_file.close()
-            print "Model saved\n"
+            saver()
             now = time.time()
 
         sys.stdout.write("\n%d episode(s) done out of %d\n" % (ep_num + 1,
                                                                num_episodes))
         sys.stdout.flush()
 
-    print "\n\nSaving model..."
-    model.save('model_pong.h5')
-    exp_file = open('model_pong.data', 'wb')
-    pickle.dump((policy_epsilon, experience), exp_file)
-    exp_file.close()
-    print "Model saved\n"
+    saver()
 
-try:
-    pong_learn(exp_sample_size=16, num_episodes=10000, save_video_every=10,
-               tensorboard=False, verbose=False)
-except KeyboardInterrupt:
-    print "\n\nSaving model..."
-    model.save('model_pong.h5')
-    exp_file = open('model_pong.data', 'wb')
-    pickle.dump((pong_policy_epsilon, pong_experience), exp_file)
-    exp_file.close()
-    print "Model saved\n"
-except:
-    print "\n\nSaving model..."
-    model.save('model_pong.h5')
-    exp_file = open('model_pong.data', 'wb')
-    pickle.dump((pong_policy_epsilon, pong_experience), exp_file)
-    exp_file.close()
-    print "Model saved\n"
-    raise
+while True:
+    render = False
+    try:
+        pong_learn(exp_sample_size=16, num_episodes=10000,
+                   save_video_every=100, tensorboard=False, verbose=False,
+                   video_record=True, render=render)
+        break
+    except KeyboardInterrupt:
+        try:
+            response = raw_input('Toggle render? (y/N): ')
+            if response.lower in ('y', 'yes', 'yup', 'ya', 'ja'):
+                render = not render
+                continue
+        except KeyboardInterrupt:
+            saver()
+            break
+    except:
+        saver()
+        print time.time()
+        raise
 
