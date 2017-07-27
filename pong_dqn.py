@@ -3,6 +3,7 @@ import gym
 import numpy as np
 from cv2 import cvtColor, COLOR_RGB2GRAY
 from scipy.misc import imresize
+from datetime import datetime
 import time
 import itertools
 import random
@@ -208,6 +209,8 @@ while True:
             break
     except:
         saver()
-        print time.time()
+        print 'Time of error: ' + str(datetime.fromtimestamp(
+                                      time.time()).strftime('%H%M on %a, %d '\
+                                      '%b \'%y')) + '\n'
         raise
 
