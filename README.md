@@ -1,5 +1,5 @@
 # ACA-Project
-All of my solutions to the practice problems related to my ACA project: Using Reinforcement Learning to play Atari games.
+All of my solutions to the practice problems related to, and the final code for, my ACA project: Using Reinforcement Learning to play Atari games.
 
 Practice:
 --------
